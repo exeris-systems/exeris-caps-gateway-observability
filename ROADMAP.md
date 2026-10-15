@@ -26,7 +26,7 @@ latency collector with percentiles (`StripedMetricsCollector`), a bounded ring-b
 `traceparent` handling (`TraceContextManager`), and three renderings of the same snapshot — Prometheus text,
 JSON and a self-contained HTML dashboard. The access log keeps the path only: no query string or fragment.
 One compile dependency, `exeris-kernel-spi`, used only for the `ObservabilityEntitlement` requirement; no
-`@Requires`. 28 tests across five classes (24 test methods plus 4 inherited from the kernel TCK's entitlement base).
+`@Requires`. Test totals are in the surefire report of the current head.
 
 Gaps between the inventory and the code, found in the code:
 

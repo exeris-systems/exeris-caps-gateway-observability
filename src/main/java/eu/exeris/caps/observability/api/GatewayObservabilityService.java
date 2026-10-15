@@ -17,6 +17,8 @@ public interface GatewayObservabilityService extends AutoCloseable {
      *
      * <p>The access log keeps the path alone: the query string and fragment are dropped and the path is
      * truncated to 2048 characters. The method is truncated to 32 and the trace ID to 128 characters.
+     * A negative duration is recorded as zero. Each call stores one {@code AccessLogEntry} in the access log,
+     * so only the metrics counters, not the whole recording path, are allocation-free.
      *
      * @param method        HTTP method (e.g. GET, POST)
      * @param path          Request path; the query string and fragment are not retained
@@ -39,7 +41,8 @@ public interface GatewayObservabilityService extends AutoCloseable {
     /**
      * Returns a point-in-time snapshot of the metrics and the most recent requests.
      *
-     * <p>The status-class counters cover 2xx to 5xx; a status below 200 counts in the total and the latency
+     * <p>The list of recent requests holds at most the 50 most recent entries, whatever the access-log
+     * capacity. The status-class counters cover 2xx to 5xx; a status below 200 counts in the total and the latency
      * histogram only.
      *
      * @return current metrics snapshot
@@ -49,7 +52,7 @@ public interface GatewayObservabilityService extends AutoCloseable {
     /**
      * Renders the request counters and latency histogram as Prometheus text exposition.
      *
-     * @return metrics exported in Prometheus / OpenMetrics format
+     * @return metrics in the classic Prometheus text exposition format
      */
     String exportPrometheus();
 

@@ -24,8 +24,9 @@ public final class GatewayObservabilities {
     /**
      * Creates a new GatewayObservabilityService with custom recent requests capacity.
      *
-     * @param ringBufferSize maximum recent requests to retain in memory for dashboard
+     * @param ringBufferSize maximum recent requests to retain in memory for the access log; positive
      * @return non-null service
+     * @throws IllegalArgumentException if {@code ringBufferSize} is not positive
      */
     public static GatewayObservabilityService newService(int ringBufferSize) {
         return new DefaultGatewayObservabilityService(ringBufferSize);
