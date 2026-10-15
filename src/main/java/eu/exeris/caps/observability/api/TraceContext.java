@@ -14,6 +14,8 @@ public record TraceContext(
         boolean sampled
 ) {
     /**
+     * Creates a trace context, rejecting identifiers that W3C Trace Context does not allow.
+     *
      * @throws IllegalArgumentException if {@code traceId} is not 32 lower-case hex characters or is all zeros,
      *                                  or {@code spanId} is not 16 lower-case hex characters or is all zeros
      */

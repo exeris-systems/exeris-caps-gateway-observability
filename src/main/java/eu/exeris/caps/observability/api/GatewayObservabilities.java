@@ -22,7 +22,8 @@ public final class GatewayObservabilities {
     }
 
     /**
-     * Creates a new GatewayObservabilityService with custom recent requests capacity.
+     * Creates a new GatewayObservabilityService with custom recent requests capacity. Every access-log slot
+     * is allocated up front (about 4.4 KB each), so the capacity is paid for in memory at creation.
      *
      * @param ringBufferSize maximum recent requests to retain in memory for the access log; positive
      * @return non-null service
