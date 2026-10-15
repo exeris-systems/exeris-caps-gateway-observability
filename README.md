@@ -7,14 +7,14 @@ Status: proof of concept, built against `exeris-kernel` 0.13.0-SNAPSHOT on JDK 2
 ## Where it sits
 
 - **Layer:** Layer 2, a gateway building block, in [`high-level-architecture.md`](https://github.com/exeris-systems/exeris-docs/blob/main/high-level-architecture.md) §3.2. Other gateway code calls it; it is not a policy and never changes a request.
-- **Depends on:** nothing beyond `exeris-sdk-annotations` (`provided`).
+- **Depends on:** `exeris-kernel-spi` (the entitlement requirement) and `exeris-sdk-annotations` (`provided`).
 - **Provides** (`@Provides`, contract version 0.1.0): `GatewayObservabilityService`.
 - **Requires:** no other capability.
 - **Wall (ADR-055):** `eu.exeris.caps.observability.api` is the cross-cap surface; `eu.exeris.caps.observability.internal` is private, and a sibling cap reaching into it fails the build. No Spring, servlet, Netty or reactive type may appear (ADR-006).
 
 ## What the source contains
 
-- `recordRequest(method, path, statusCode, durationNanos, traceId)` feeds `StripedMetricsCollector` (striped counters and a latency histogram) and `RingBufferAccessLog` (the most recent `AccessLogEntry` records); `incrementActiveRequests` and `decrementActiveRequests` track in-flight requests.
+- `recordRequest(method, path, statusCode, durationNanos, traceId)` feeds `StripedMetricsCollector` (striped counters and a latency histogram) and `RingBufferAccessLog` (the most recent requests, in preallocated slots overwritten in place; `AccessLogEntry` records are copied out when a snapshot or export is built). `recordRequest` allocates nothing, which a test on the kernel allocation TCK proves; `incrementActiveRequests` and `decrementActiveRequests` track in-flight requests.
 - `snapshot()` returns a `MetricsSnapshot`; `exportPrometheus()`, `exportJson()` and `exportDashboardHtml()` render it (`DashboardRenderer`).
 - `TraceContextManager` extracts a W3C `traceparent` header or creates a root context, and derives child contexts (`FastW3CTraceContext`).
 

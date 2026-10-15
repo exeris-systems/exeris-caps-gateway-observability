@@ -1,0 +1,29 @@
+{
+  "schemaVersion" : 2,
+  "stamp" : {
+    "validated" : true,
+    "compositionVersion" : "0.0.0",
+    "contentBinding" : "sha256:de6d5a0855fc9ac8d1da023cff982638fb25560ffec625bfe2415804ec3b2b16"
+  },
+  "modules" : [
+    {
+      "name" : "ObservabilityModule",
+      "packageName" : "eu.exeris.caps.observability",
+      "qualifiedName" : "eu.exeris.caps.observability.ObservabilityModule",
+      "module" : {
+        "provides" : [
+          {
+            "service" : "eu.exeris.caps.observability.api.GatewayObservabilityService",
+            "version" : "0.1.0"
+          }
+        ],
+        "requires" : [ ]
+      }
+    }
+  ],
+  "resolutions" : [ ],
+  "initOrder" : [
+    "eu.exeris.caps.observability.ObservabilityModule"
+  ],
+  "warnings" : [ ]
+}
