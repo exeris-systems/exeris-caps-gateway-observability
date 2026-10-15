@@ -121,4 +121,13 @@ class GatewayObservabilityServiceTest {
             assertThat(entry.traceId()).hasSize(128);
         }
     }
+
+    @Test
+    @DisplayName("A negative duration is clamped to zero in the access log as in the metrics")
+    void negativeDurationIsClamped() {
+        try (GatewayObservabilityService service = GatewayObservabilities.newService()) {
+            service.recordRequest("GET", "/x", 200, -5_000L, null);
+            assertThat(service.snapshot().recentRequests().get(0).durationMicros()).isZero();
+        }
+    }
 }

@@ -28,6 +28,7 @@ public final class DefaultGatewayObservabilityService implements GatewayObservab
 
     @Override
     public void recordRequest(String method, String path, int statusCode, long durationNanos, String traceId) {
+        durationNanos = Math.max(0L, durationNanos);
         metrics.record(statusCode, durationNanos);
         long nowMillis = System.currentTimeMillis();
         long durationMicros = durationNanos / 1000L;
