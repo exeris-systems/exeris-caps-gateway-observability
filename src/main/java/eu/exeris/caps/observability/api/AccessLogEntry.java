@@ -1,7 +1,8 @@
 package eu.exeris.caps.observability.api;
 
 /**
- * Lightweight access log record for real-time aggregation and live preview.
+ * Lightweight access log record for real-time aggregation and live preview. An entry is a copy made when a
+ * snapshot or export reads the access log; recording a request does not create one.
  *
  * @since 0.1.0
  */

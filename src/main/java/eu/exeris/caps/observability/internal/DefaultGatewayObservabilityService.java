@@ -14,10 +14,6 @@ import java.util.List;
  */
 public final class DefaultGatewayObservabilityService implements GatewayObservabilityService {
 
-    private static final int MAX_LOGGED_PATH_LENGTH = 2048;
-    private static final int MAX_LOGGED_METHOD_LENGTH = 32;
-    private static final int MAX_LOGGED_TRACE_ID_LENGTH = 128;
-
     private final StripedMetricsCollector metrics = new StripedMetricsCollector();
     private final FastW3CTraceContext traceManager = new FastW3CTraceContext();
     private final RingBufferAccessLog ringBuffer;
@@ -30,31 +26,7 @@ public final class DefaultGatewayObservabilityService implements GatewayObservab
     public void recordRequest(String method, String path, int statusCode, long durationNanos, String traceId) {
         durationNanos = Math.max(0L, durationNanos);
         metrics.record(statusCode, durationNanos);
-        long nowMillis = System.currentTimeMillis();
-        long durationMicros = durationNanos / 1000L;
-        ringBuffer.add(new AccessLogEntry(nowMillis, truncate(method, MAX_LOGGED_METHOD_LENGTH), pathOnly(path),
-                statusCode, durationMicros, truncate(traceId, MAX_LOGGED_TRACE_ID_LENGTH)));
-    }
-
-    private static String truncate(String value, int max) {
-        return value == null || value.length() <= max ? value : value.substring(0, max);
-    }
-
-    /** The log keeps the path alone: no query string or fragment, and a bounded length. */
-    private static String pathOnly(String path) {
-        if (path == null) {
-            return null;
-        }
-        int end = path.length();
-        int q = path.indexOf('?');
-        if (q >= 0) {
-            end = q;
-        }
-        int f = path.indexOf('#');
-        if (f >= 0 && f < end) {
-            end = f;
-        }
-        return path.substring(0, Math.min(end, MAX_LOGGED_PATH_LENGTH));
+        ringBuffer.add(System.currentTimeMillis(), method, path, statusCode, durationNanos / 1000L, traceId);
     }
 
     @Override

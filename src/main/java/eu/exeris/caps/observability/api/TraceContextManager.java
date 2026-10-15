@@ -10,7 +10,8 @@ package eu.exeris.caps.observability.api;
 public interface TraceContextManager {
 
     /**
-     * Extracts existing traceparent or generates a new root trace context.
+     * Extracts existing traceparent or generates a new root trace context. A missing or malformed header, and a
+     * header of any version other than {@code 00}, yields a new root context rather than an error.
      *
      * @param incomingHeader raw W3C traceparent header value (may be null or blank)
      * @return non-null TraceContext

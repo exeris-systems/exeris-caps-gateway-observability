@@ -13,6 +13,10 @@ public record TraceContext(
         String spanId,
         boolean sampled
 ) {
+    /**
+     * @throws IllegalArgumentException if {@code traceId} is not 32 lower-case hex characters or is all zeros,
+     *                                  or {@code spanId} is not 16 lower-case hex characters or is all zeros
+     */
     public TraceContext {
         if (!isLowerHex(traceId, 32) || isAllZero(traceId)) {
             throw new IllegalArgumentException("traceId must be 32 lower-case hex characters and not all zeros");

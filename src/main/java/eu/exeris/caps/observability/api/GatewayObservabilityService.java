@@ -17,8 +17,12 @@ public interface GatewayObservabilityService extends AutoCloseable {
      *
      * <p>The access log keeps the path alone: the query string and fragment are dropped and the path is
      * truncated to 2048 characters. The method is truncated to 32 and the trace ID to 128 characters.
-     * A negative duration is recorded as zero. Each call stores one {@code AccessLogEntry} in the access log,
-     * so only the metrics counters, not the whole recording path, are allocation-free.
+     * A negative duration is recorded as zero.
+     *
+     * <p>The call allocates nothing: the metrics counters are striped and the access log overwrites a
+     * preallocated slot in place. An entry is dropped, with no effect on the metrics, only if writers are a
+     * full lap of the access log apart. {@code AccessLogEntry} objects are created when a snapshot or an export
+     * copies the slots out.
      *
      * @param method        HTTP method (e.g. GET, POST)
      * @param path          Request path; the query string and fragment are not retained
@@ -66,7 +70,7 @@ public interface GatewayObservabilityService extends AutoCloseable {
     /**
      * Renders a snapshot as a self-contained HTML page; request-derived text is HTML-escaped.
      *
-     * @return self-contained interactive HTML dashboard
+     * @return self-contained HTML page that reloads itself every second
      */
     String exportDashboardHtml();
 
