@@ -45,6 +45,8 @@ public record TraceContext(
     }
 
     /**
+     * Serialises this context as a W3C {@code traceparent} header value, version {@code 00}.
+     *
      * @return serialized W3C traceparent header value
      */
     public String toTraceparent() {

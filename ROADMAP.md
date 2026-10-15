@@ -21,11 +21,12 @@ Milestones are versions, not dates. Dates appear only on what has shipped; nothi
 
 ## Where this sits
 
-Layer 3 gateway cap. Provides `GatewayObservabilityService`: request counters by status class, a striped
+Layer 2 gateway building block. Provides `GatewayObservabilityService`: request counters by status class, a striped
 latency collector with percentiles (`StripedMetricsCollector`), a bounded ring-buffer access log, W3C
 `traceparent` handling (`TraceContextManager`), and three renderings of the same snapshot — Prometheus text,
 JSON and a self-contained HTML dashboard. The access log keeps the path only: no query string or fragment.
-Zero runtime dependencies; no `@Requires`. 8 tests across three classes.
+One compile dependency, `exeris-kernel-spi`, used only for the `ObservabilityEntitlement` requirement; no
+`@Requires`. 28 tests across five classes (24 test methods plus 4 inherited from the kernel TCK's entitlement base).
 
 Gaps between the inventory and the code, found in the code:
 
@@ -55,7 +56,7 @@ Gaps between the inventory and the code, found in the code:
 - [ ] The access log keeps the path only (no query string or fragment), with a test
 - [ ] Kernel `0.13.0-SNAPSHOT`; SDK `0.12.0` and tooling `0.10.0` pins aligned
 - [ ] Artefacts stay `0.1.0-SNAPSHOT` until kernel `0.13.0` is released; a non-snapshot `0.1.0` is cut only after that
-- [ ] Licence enforcement: `GatewayObservabilityEntitlement` (id `exeris-caps-gateway-observability`),
+- [ ] Licence enforcement: `ObservabilityEntitlement` (id `exeris-caps-gateway-observability`),
       `META-INF/services` registration, TCK test and boot test against the kernel's Phase 0 gate
 - [ ] `build.yml` green on JDK 25 and 26; `cap-manifest.json` committed through the two-pass build
 - [ ] `exeris-docs` PR adding the HLA §3.2 row for the separate commercial cap

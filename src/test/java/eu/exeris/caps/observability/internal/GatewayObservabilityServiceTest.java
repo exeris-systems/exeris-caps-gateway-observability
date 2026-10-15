@@ -96,4 +96,29 @@ class GatewayObservabilityServiceTest {
         assertThat(ring.recent(-1)).isEmpty();
         assertThat(ring.recent(0)).isEmpty();
     }
+
+    @Test
+    @DisplayName("Dashboard rows carry their own status class: a 301 is 3xx and never 5xx")
+    void dashboardRowStatusClass() {
+        try (GatewayObservabilityService service = GatewayObservabilities.newService()) {
+            service.recordRequest("GET", "/moved", 301, 1000L, null);
+            String html = service.exportDashboardHtml();
+            assertThat(html).contains("<span class=\"tag-3xx\">301</span>").doesNotContain("<span class=\"tag-5xx\">");
+        }
+        assertThat(DashboardRenderer.statusClass(101)).isEqualTo("tag-1xx");
+        assertThat(DashboardRenderer.statusClass(204)).isEqualTo("tag-2xx");
+        assertThat(DashboardRenderer.statusClass(404)).isEqualTo("tag-4xx");
+        assertThat(DashboardRenderer.statusClass(503)).isEqualTo("tag-5xx");
+    }
+
+    @Test
+    @DisplayName("The access log bounds the method and the trace ID")
+    void accessLogBoundsMethodAndTraceId() {
+        try (GatewayObservabilityService service = GatewayObservabilities.newService()) {
+            service.recordRequest("M".repeat(500), "/x", 200, 1000L, "t".repeat(5000));
+            var entry = service.snapshot().recentRequests().get(0);
+            assertThat(entry.method()).hasSize(32);
+            assertThat(entry.traceId()).hasSize(128);
+        }
+    }
 }

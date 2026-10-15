@@ -123,7 +123,7 @@ public final class DashboardRenderer {
         sb.append("table { width: 100%; border-collapse: collapse; font-size: 13px; font-family: monospace; }\n");
         sb.append("th { text-align: left; padding: 8px 12px; background: #0f172a; color: #94a3b8; border-bottom: 1px solid #334155; }\n");
         sb.append("td { padding: 8px 12px; border-bottom: 1px solid #1e293b; }\n");
-        sb.append(".tag-2xx { color: #4ade80; font-weight: bold; } .tag-4xx { color: #facc15; font-weight: bold; } .tag-5xx { color: #f87171; font-weight: bold; }\n");
+        sb.append(".tag-1xx { color: #94a3b8; font-weight: bold; } .tag-2xx { color: #4ade80; font-weight: bold; } .tag-3xx { color: #60a5fa; font-weight: bold; } .tag-4xx { color: #facc15; font-weight: bold; } .tag-5xx { color: #f87171; font-weight: bold; }\n");
         sb.append(".trace-id { color: #cbd5e1; font-size: 11px; }\n");
         sb.append("</style>\n</head>\n<body>\n");
 
@@ -175,8 +175,7 @@ public final class DashboardRenderer {
             sb.append("      <tr><td colspan=\"6\" style=\"text-align:center; color:#64748b;\">Waiting for incoming traffic...</td></tr>\n");
         } else {
             for (AccessLogEntry entry : recent) {
-                String statusClass = (entry.statusCode() >= 200 && entry.statusCode() < 300) ? "tag-2xx" :
-                        (entry.statusCode() >= 400 && entry.statusCode() < 500) ? "tag-4xx" : "tag-5xx";
+                String statusClass = statusClass(entry.statusCode());
                 sb.append("      <tr>");
                 sb.append("<td>").append(TIME_FORMATTER.format(Instant.ofEpochMilli(entry.timestampMillis()))).append("</td>");
                 sb.append("<td><strong>").append(escapeHtml(entry.method())).append("</strong></td>");
@@ -197,6 +196,15 @@ public final class DashboardRenderer {
     }
 
     /** Escapes text for an HTML element body or a quoted attribute value. */
+    /** CSS class of a status code: its hundreds class, with 5xx covering every code from 500 up. */
+    static String statusClass(int status) {
+        if (status >= 500) return "tag-5xx";
+        if (status >= 400) return "tag-4xx";
+        if (status >= 300) return "tag-3xx";
+        if (status >= 200) return "tag-2xx";
+        return "tag-1xx";
+    }
+
     static String escapeHtml(String text) {
         if (text == null) {
             return "";

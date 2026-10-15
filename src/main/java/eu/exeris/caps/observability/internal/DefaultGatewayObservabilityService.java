@@ -15,6 +15,8 @@ import java.util.List;
 public final class DefaultGatewayObservabilityService implements GatewayObservabilityService {
 
     private static final int MAX_LOGGED_PATH_LENGTH = 2048;
+    private static final int MAX_LOGGED_METHOD_LENGTH = 32;
+    private static final int MAX_LOGGED_TRACE_ID_LENGTH = 128;
 
     private final StripedMetricsCollector metrics = new StripedMetricsCollector();
     private final FastW3CTraceContext traceManager = new FastW3CTraceContext();
@@ -29,7 +31,12 @@ public final class DefaultGatewayObservabilityService implements GatewayObservab
         metrics.record(statusCode, durationNanos);
         long nowMillis = System.currentTimeMillis();
         long durationMicros = durationNanos / 1000L;
-        ringBuffer.add(new AccessLogEntry(nowMillis, method, pathOnly(path), statusCode, durationMicros, traceId));
+        ringBuffer.add(new AccessLogEntry(nowMillis, truncate(method, MAX_LOGGED_METHOD_LENGTH), pathOnly(path),
+                statusCode, durationMicros, truncate(traceId, MAX_LOGGED_TRACE_ID_LENGTH)));
+    }
+
+    private static String truncate(String value, int max) {
+        return value == null || value.length() <= max ? value : value.substring(0, max);
     }
 
     /** The log keeps the path alone: no query string or fragment, and a bounded length. */

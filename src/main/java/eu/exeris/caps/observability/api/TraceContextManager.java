@@ -3,6 +3,8 @@ package eu.exeris.caps.observability.api;
 /**
  * High-performance parser and generator for {@link TraceContext}.
  *
+ * <p>Implementations are thread-safe.
+ *
  * @since 0.1.0
  */
 public interface TraceContextManager {
@@ -25,8 +27,8 @@ public interface TraceContextManager {
     /**
      * Derives a child span context from an existing context for upstream dispatching.
      *
-     * @param parent non-null parent context
-     * @return child TraceContext with fresh spanId
+     * @param parent parent context; when {@code null} a new root context is returned
+     * @return child TraceContext with fresh spanId and the parent's trace ID and sampled flag
      */
     TraceContext createChild(TraceContext parent);
 }
