@@ -10,7 +10,7 @@
 
     <name>Exeris Caps :: Gateway Observability</name>
     <description>
-        High-performance, zero-allocation Gateway Observability capability.
+        High-performance, lock-free Gateway Observability capability.
         Provides Prometheus/OpenMetrics scraping, W3C TraceContext propagation,
         and real-time aggregated preview dashboard for Exeris Gateway.
     </description>

@@ -39,6 +39,9 @@ public interface GatewayObservabilityService extends AutoCloseable {
     /**
      * Returns a point-in-time snapshot of the metrics and the most recent requests.
      *
+     * <p>The status-class counters cover 2xx to 5xx; a status below 200 counts in the total and the latency
+     * histogram only.
+     *
      * @return current metrics snapshot
      */
     MetricsSnapshot snapshot();

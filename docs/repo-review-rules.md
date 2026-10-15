@@ -104,8 +104,10 @@ S9. **The access log holds no request secrets.** `AccessLogEntry` and the export
     credential added to an entry or to an export → `[HARD BLOCK]`.
 
 S10. **Recording stays lock-free and bounded.** `StripedMetricsCollector` uses striped counters and
-    `RingBufferAccessLog` a fixed-size ring. A lock, a blocking call, an unbounded collection or a
-    per-request allocation on `recordRequest` → `[CONTRACT]`.
+    `RingBufferAccessLog` a fixed-size ring. A lock, a blocking call or an unbounded collection on
+    `recordRequest` → `[CONTRACT]`. The one accepted per-request allocation is the `AccessLogEntry` the
+    ring stores, with the bounded strings it holds; any further allocation on `recordRequest` →
+    `[CONTRACT]`.
 
 S11. **The exports escape what they print.** `exportPrometheus`, `exportJson` and
     `exportDashboardHtml` render request-derived text (paths). A path rendered into HTML, JSON or a

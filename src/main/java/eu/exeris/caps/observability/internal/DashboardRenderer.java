@@ -195,7 +195,6 @@ public final class DashboardRenderer {
         return sb.toString();
     }
 
-    /** Escapes text for an HTML element body or a quoted attribute value. */
     /** CSS class of a status code: its hundreds class, with 5xx covering every code from 500 up. */
     static String statusClass(int status) {
         if (status >= 500) return "tag-5xx";
@@ -205,6 +204,7 @@ public final class DashboardRenderer {
         return "tag-1xx";
     }
 
+    /** Escapes text for an HTML element body or a quoted attribute value. */
     static String escapeHtml(String text) {
         if (text == null) {
             return "";
