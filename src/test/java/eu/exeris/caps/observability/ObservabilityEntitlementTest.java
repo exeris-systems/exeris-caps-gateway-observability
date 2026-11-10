@@ -1,5 +1,6 @@
 package eu.exeris.caps.observability;
 
+import eu.exeris.kernel.spi.contract.EntitlementClass;
 import eu.exeris.kernel.spi.contract.EntitlementRequirement;
 import eu.exeris.kernel.tck.contract.AbstractEntitlementRequirementTck;
 import org.junit.jupiter.api.DisplayName;
@@ -34,5 +35,16 @@ class ObservabilityEntitlementTest extends AbstractEntitlementRequirementTck {
     void requiresOnlyItsOwnCapability() {
         assertThat(new ObservabilityEntitlement().requiredCapabilities()).containsExactly("exeris-caps-gateway-observability");
         assertThat(ObservabilityEntitlement.CAPABILITY_ID).isEqualTo("exeris-caps-gateway-observability");
+    }
+
+    @Test
+    @DisplayName("It declares the COMMERCIAL entitlement class, stable across calls")
+    void entitlementClassIsCommercialAndStable() {
+        ObservabilityEntitlement entitlement = new ObservabilityEntitlement();
+        EntitlementClass first = entitlement.entitlementClass();
+
+        assertThat(first).isEqualTo(EntitlementClass.COMMERCIAL);
+        assertThat(entitlement.entitlementClass()).isSameAs(first);
+        assertThat(new ObservabilityEntitlement().entitlementClass()).isEqualTo(EntitlementClass.COMMERCIAL);
     }
 }
