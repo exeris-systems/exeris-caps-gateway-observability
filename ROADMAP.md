@@ -40,7 +40,7 @@ Gaps between the inventory and the code, found in the code:
 
 | Constraint | Effect here | Owner |
 |---|---|---|
-| Kernel licence gate (ADR-088, ADR-089) in kernel `0.13.0-SNAPSHOT` | Entitlement resolvable only from that line | `exeris-kernel` |
+| Kernel licence gate (ADR-088, ADR-089) in kernel `0.13.x` | Entitlement resolvable only from that line; `0.13.1` is pinned and on Maven Central | `exeris-kernel` |
 | `RequestFilterChain` contract (ADR-099) | 0.2.0 binds to it | `exeris-caps-service-boundary-core` |
 | ADR on the response-side seam (gateway-core 0.2.0) | Entry condition: no policy cap starts its 0.2.0 before it is accepted | `exeris-caps-gateway-core`, `exeris-docs` |
 | HLA §3.2 row for this cap (separate commercial cap, layer 2, registered in `exeris-docs#194`) | The registry carries its status once the row lands | `exeris-docs` |
@@ -51,12 +51,12 @@ Gaps between the inventory and the code, found in the code:
 ## 0.1.0 — the code PR
 
 - [ ] Defects found in the pre-import review are fixed in the import, each with a test
-- [ ] Code imported; repository files and ADR link stubs added
-- [ ] `@Provides(GatewayObservabilityService)` at contract `0.1.0`
-- [ ] The access log keeps the path only (no query string or fragment), with a test
-- [ ] Kernel `0.13.0-SNAPSHOT`; SDK `0.12.0` and tooling `0.10.0` pins aligned
-- [ ] Artefacts stay `0.1.0-SNAPSHOT` until kernel `0.13.0` is released; a non-snapshot `0.1.0` is cut only after that
-- [ ] Licence enforcement: `ObservabilityEntitlement` (id `exeris-caps-gateway-observability`),
+- [x] Code imported; repository files and ADR link stubs added
+- [x] `@Provides(GatewayObservabilityService)` at contract `0.1.0`
+- [x] The access log keeps the path only (no query string or fragment), with a test
+- [x] Kernel `0.13.1`, SDK `0.13.3` and tooling `0.11.0` pinned, all resolved from Maven Central
+- [ ] Artefacts stay `0.1.0-SNAPSHOT` until the exit gate below holds; kernel `0.13.x` is released, so it no longer gates a non-snapshot `0.1.0`
+- [x] Licence enforcement: `ObservabilityEntitlement` (id `exeris-caps-gateway-observability`),
       `META-INF/services` registration, TCK test and boot test against the kernel's Phase 0 gate
 - [ ] `build.yml` green on JDK 25 and 26; `cap-manifest.json` committed through the two-pass build
 - [ ] `exeris-docs` PR adding the HLA §3.2 row for the separate commercial cap
